@@ -1,14 +1,14 @@
-defmodule AccessTokenCache do
+defmodule ApiClient.AccessTokenCache do
   use GenServer
 
-  alias AccessToken
+  alias ApiClient.AccessToken
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, :ok, opts)
   end
 
-  def get(config) do
-    GenServer.call(AccessTokenCache, {:get, config})
+  def get() do
+    GenServer.call(__MODULE__, :get)
   end
 
   @impl true
@@ -17,25 +17,21 @@ defmodule AccessTokenCache do
   end
 
   @impl true
-  def handle_call({:get, config}, _from, nil) do
-    get_access_token(config)
+  def handle_call(:get, _from, nil) do
+    get_access_token()
   end
 
-  def handle_call({:get, config}, _from, %AccessToken{} = access_token) do
+  def handle_call(:get, _from, %AccessToken{} = access_token) do
     if AccessToken.valid?(access_token) do
-      {:reply, {:ok, access_token}, access_token}
+      {:reply, access_token, access_token}
     else
-      get_access_token(config)
+      get_access_token()
     end
   end
 
-  defp get_access_token(config) do
-    case config.client_module.access_token(config) do
-      {:ok, access_token} ->
-        {:reply, {:ok, access_token}, access_token}
+  defp get_access_token() do
+    access_token = AccessToken.get()
 
-      error ->
-        {:reply, error, nil}
-    end
+    {:reply, access_token, access_token}
   end
 end

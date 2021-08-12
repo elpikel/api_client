@@ -5,10 +5,11 @@ defmodule ApiClient.Application do
 
   use Application
 
+  alias ApiClient.AccessTokenCache
+
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: ApiClient.Worker.start_link(arg)
-      # {ApiClient.Worker, arg}
+      {AccessTokenCache, name: AccessTokenCache}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
