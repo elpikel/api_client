@@ -4,9 +4,9 @@ defmodule ApiClient.HttpClient do
   def get(url, token \\ nil) do
     case HTTPoison.get(Url.new(url), header(token)) do
       {:ok, %HTTPoison.Response{body: body, status_code: 200}} ->
-        Jason.decode(body)
+        Jason.decode!(body)
 
-      _ ->
+      _error ->
         :error
     end
   end
