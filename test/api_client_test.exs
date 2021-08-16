@@ -15,7 +15,9 @@ defmodule ApiClientTest do
   end
 
   test "get_data", %{bypass: bypass} do
-    Bypass.expect(bypass, "GET", "/token", fn conn -> Plug.Conn.resp(conn, 200, @access_token) end)
+    Bypass.expect(bypass, "GET", "/token", fn conn ->
+      Plug.Conn.resp(conn, 200, @access_token)
+    end)
 
     Bypass.expect(bypass, "GET", "/protected_data", fn conn ->
       Plug.Conn.resp(conn, 200, @protected_data)
