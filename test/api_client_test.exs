@@ -20,6 +20,8 @@ defmodule ApiClientTest do
     end)
 
     Bypass.expect(bypass, "GET", "/protected_data", fn conn ->
+      assert Enum.member?(conn.req_headers, {"authorization", "Bearer eyJhbG"}) == true
+
       Plug.Conn.resp(conn, 200, @protected_data)
     end)
 
