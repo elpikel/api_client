@@ -35,7 +35,7 @@ defmodule ApiClient.AccessTokenCacheTest do
       assert access_token.token == new_access_token.token
     end
 
-    test "fetches access token when is expired", %{bypass: bypass} do
+    test "fetches access token when cache is expired", %{bypass: bypass} do
       Bypass.expect(bypass, fn conn ->
         Plug.Conn.resp(conn, 200, "{\"access_token\":\"#{random_string(8)}\", \"expires_in\":1}")
       end)
