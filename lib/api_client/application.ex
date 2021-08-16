@@ -8,12 +8,15 @@ defmodule ApiClient.Application do
   alias ApiClient.AccessTokenCache
 
   def start(_type, _args) do
-    children = [
-      {AccessTokenCache, name: AccessTokenCache}
-    ]
+    children =
+      if Mix.env() == :test do
+        []
+      else
+        [
+          {AccessTokenCache, name: AccessTokenCache}
+        ]
+      end
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: ApiClient.Supervisor]
     Supervisor.start_link(children, opts)
   end

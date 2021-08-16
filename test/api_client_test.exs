@@ -1,11 +1,15 @@
 defmodule ApiClientTest do
   use ExUnit.Case
 
+  alias ApiClient.AccessTokenCache
+
   @access_token "{\"access_token\":\"eyJhbG\", \"expires_in\":100}"
   @protected_data "{\"data\": \"secret\"}"
 
   setup do
     bypass = Bypass.open(port: 50_123)
+
+    {:ok, _pid} = start_supervised({AccessTokenCache, [name: AccessTokenCache]})
 
     {:ok, bypass: bypass}
   end

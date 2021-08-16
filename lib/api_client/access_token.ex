@@ -2,13 +2,18 @@ defmodule ApiClient.AccessToken do
   @enforce_keys [:token, :expires_at]
   defstruct token: nil, expires_at: nil
 
-  @http_client Application.fetch_env!(:api_client, :http_client_module)
+  alias ApiClient.HttpClient
+
   @token_url "token"
 
   def get do
-    @token_url
-    |> @http_client.get()
-    |> new()
+    case HttpClient.get(@token_url) do
+      :error ->
+        :error
+
+      result ->
+        new(result)
+    end
   end
 
   def valid?(%__MODULE__{} = access_token) do

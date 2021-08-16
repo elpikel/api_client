@@ -30,8 +30,12 @@ defmodule ApiClient.AccessTokenCache do
   end
 
   defp get_access_token() do
-    access_token = AccessToken.get()
+    case AccessToken.get() do
+      :error ->
+        {:reply, :error, nil}
 
-    {:reply, access_token, access_token}
+      access_token ->
+        {:reply, access_token, access_token}
+    end
   end
 end
